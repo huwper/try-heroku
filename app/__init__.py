@@ -4,7 +4,7 @@ from math import sqrt
 import httpx
 
 from jinja2 import Template
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 from starlette.responses import FileResponse, HTMLResponse
 
 REPO_ROOT = Path(__file__).parent.parent
@@ -38,9 +38,10 @@ def get_name(loc):
 
 
 @app.get("/")
-async def root():
+async def root(request: Request):
+    ip = request.client.host
     async with httpx.AsyncClient() as client:
-        r = await client.get('https://api.ip2loc.com/yWECZIoB3U5DtW26IPwGdPxDjajpV3p3/detect')
+        r = await client.get(f'https://api.ip2loc.com/yWECZIoB3U5DtW26IPwGdPxDjajpV3p3/{ip}')
     
     if r.status_code != 200:
         raise HTTPException(status_code=404, detail="Item not found")
@@ -51,7 +52,7 @@ async def root():
     city = content["location"]["city"]
     name = get_name((lat, lon))
 
-    print(name, city, lat, lon)
+    print(ip, name, city, lat, lon)
 
     t = Template((REPO_ROOT/"resources/index.html.in").read_text())
 
