@@ -1,1 +1,1 @@
-web: uvicorn app:app --reload
+web: gunicorn app:app --workers 4 --worker-class uvicorn.workers.UvicornWorker
