@@ -48,7 +48,10 @@ async def root():
     content = r.json()
     lat = content["location"]["latitude"]
     lon = content["location"]["longitude"]
+    city = content["location"]["city"]
     name = get_name((lat, lon))
+
+    print(name, city, lat, lon)
 
     t = Template((REPO_ROOT/"resources/index.html.in").read_text())
 
