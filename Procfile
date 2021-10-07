@@ -1,1 +1,1 @@
-web: gunicorn gettingstarted.wsgi
+web: uvicorn app:app --reload
